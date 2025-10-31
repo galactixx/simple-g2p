@@ -21,6 +21,7 @@ if __name__ == "__main__":
     assert model_info is not None
     _, loss_filename, _ = model_info
 
+    model = args.model.upper()
     data = pd.read_csv(f"./losses/{loss_filename}")
 
     # plot the training and validation losses against sequence
@@ -58,7 +59,7 @@ if __name__ == "__main__":
     ax2.set_ylabel("Sequence Accuracy")
     ax1.legend(loc="upper left")
     ax2.legend(loc="upper right")
-    ax1.set_title("Training & Validation Loss vs Accuracy")
+    ax1.set_title(f"{model} Training & Validation Loss vs Accuracy")
 
     plt.tight_layout()
     plt.savefig(
@@ -103,7 +104,7 @@ if __name__ == "__main__":
     ax2.set_ylabel("Teacher Forcing Probability")
     ax1.legend(loc="upper left")
     ax2.legend(loc="upper right")
-    ax1.set_title("Teacher Forcing Probability vs Loss")
+    ax1.set_title(f"{model} Teacher Forcing Probability vs Loss")
 
     plt.tight_layout()
     plt.savefig(
