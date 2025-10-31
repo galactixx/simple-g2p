@@ -70,6 +70,8 @@ class G2PLSTM(torch.nn.Module):
         self.enc_proj = EncoderProjection(enc.hidden, dec.hidden, dec.layers)
 
         self.luong_attn = LuongAttention()
+        self.enc_layer_norm = torch.nn.LayerNorm(dec.hidden)
+        self.dec_layer_norm = torch.nn.LayerNorm(2 * dec.hidden)
 
     def forward(
         self,
@@ -90,7 +92,7 @@ class G2PLSTM(torch.nn.Module):
             packed_out, batch_first=True
         )
 
-        enc_out = self.proj(enc_out)
+        enc_out = self.enc_layer_norm(self.proj(enc_out))
         enc_mask = enc_in == self.enc.pad_id
 
         init_h, init_c = self.enc_proj(torch.cat([h[-2], h[-1]], dim=1))
@@ -113,7 +115,7 @@ class G2PLSTM(torch.nn.Module):
             )
 
             context = self.luong_attn(enc_mask, enc_out, dec_hidden[-1])
-            cat = torch.cat([dec_out.squeeze(1), context], dim=1)
+            cat = self.dec_layer_norm(torch.cat([dec_out.squeeze(1), context], dim=1))
 
             t_logits = self.fc(cat)
             outputs.append(t_logits.unsqueeze(1))

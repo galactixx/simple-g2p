@@ -84,6 +84,7 @@ def create_dataloaders(
         batch_size=64,
         num_workers=2,
         worker_init_fn=worker_init_fn,
+        persistent_workers=True,
     )
     val_loader = DataLoader(
         val_dataset,
@@ -91,6 +92,7 @@ def create_dataloaders(
         collate_fn=collate_fn,
         batch_size=32,
         num_workers=2,
+        persistent_workers=True,
     )
     test_loader = DataLoader(
         test_dataset,
@@ -98,6 +100,7 @@ def create_dataloaders(
         collate_fn=collate_fn,
         batch_size=32,
         num_workers=2,
+        persistent_workers=True,
     )
 
     return train_loader, val_loader, test_loader

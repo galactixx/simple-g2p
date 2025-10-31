@@ -160,7 +160,7 @@ if __name__ == "__main__":
         vocab=dec_vocab_dim,
         embed=256,
         hidden=512,
-        layers=1,
+        layers=2,
         dropout=0.35,
         pad_id=DECODE_PAD_ID,
     )
@@ -168,9 +168,13 @@ if __name__ == "__main__":
     model = G2PLSTM(enc=enc_module, dec=dec_module)
     model.to(device)
 
+    SCHE_PATIENCE = 3
+
     optimizer = AdamW(model.parameters(), lr=1e-3, weight_decay=1e-4)
-    scheduler = ReduceLROnPlateau(optimizer, mode="min", factor=0.2, patience=3)
-    criterion = CrossEntropyLoss(label_smoothing=0.15, ignore_index=DECODE_PAD_ID)
+    scheduler = ReduceLROnPlateau(
+        optimizer, mode="min", factor=0.2, patience=SCHE_PATIENCE
+    )
+    criterion = CrossEntropyLoss(label_smoothing=0.10, ignore_index=DECODE_PAD_ID)
 
     EPOCHS = 100
     PATIENCE = 7
@@ -179,7 +183,7 @@ if __name__ == "__main__":
     scaler = GradScaler()
     best_loss, no_improve = float("inf"), 0
 
-    step = 0
+    p = 1.0
     for epoch in range(EPOCHS):
         model.train()
         running_loss = 0
@@ -190,7 +194,6 @@ if __name__ == "__main__":
             dec_target = phonemes[:, 1:]
 
             optimizer.zero_grad()
-            p = max(0.20, 1.0 - step / 80_000)
 
             with autocast():
                 logits = model(graphemes, graphemes_lens, dec_in, p)
@@ -204,8 +207,6 @@ if __name__ == "__main__":
             ema.update()
 
             running_loss += loss.item() * graphemes.size(0)
-            step += 1
-            break
 
         train_loss = running_loss / len(train_loader.dataset)
         val_loss = token_level_evaluate(model, criterion, ema, val_loader)
@@ -228,5 +229,8 @@ if __name__ == "__main__":
             ema.restore()
         else:
             no_improve += 1
+            if no_improve >= SCHE_PATIENCE:
+                p *= 0.8
+
             if no_improve >= PATIENCE:
                 break
