@@ -14,4 +14,6 @@ def lstm_init(config: TokenConfig) -> torch.nn.Module:
     return G2PLSTM(enc=enc_module, dec=dec_module)
 
 
-MODELS: Dict[str, Tuple[str, ModelInit]] = {"lstm": ("g2p-lstm.bin", lstm_init)}
+MODELS: Dict[str, Tuple[str, str, ModelInit]] = {
+    "lstm": ("g2p-lstm.bin", "lstm.csv", lstm_init)
+}

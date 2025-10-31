@@ -1,5 +1,6 @@
 from typing import Tuple
 
+from constants import PAD
 from g2p import LSTMModule
 from preprocessing import TokenConfig
 

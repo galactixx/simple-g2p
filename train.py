@@ -69,7 +69,7 @@ if __name__ == "__main__":
 
     model_info = MODELS.get(args.model, None)
     assert model_info is not None
-    _, model_init = model_info
+    _, _, model_init = model_info
 
     cmu_dict = load_cmu_dict()
     graphemes, config = parse_cmu_dict(cmu_dict=cmu_dict)
@@ -125,7 +125,7 @@ if __name__ == "__main__":
 
         train_loss = running_loss / len(train_loader.dataset)
         val_loss = token_level_evaluate(model, criterion, ema, val_loader)
-        val_seq_acc = seq_level_evaluate(model, val_loader, config, ema)
+        val_seq_acc = seq_level_evaluate(model, val_loader, config, ref_map, ema)
         scheduler.step(val_loss)
 
         print(

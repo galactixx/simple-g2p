@@ -9,6 +9,7 @@ from constants import DECODE, ENCODE, SEED
 from utils import CMUDictType
 
 Graphemes: TypeAlias = List[Tuple[int, str, List[List[str]]]]
+RefMap: TypeAlias = Dict[int, List[List[int]]]
 
 
 @dataclass(frozen=True)
@@ -35,8 +36,8 @@ def build_ref_map(
     val_pairs: List[PhonemePair],
     test_pairs: List[PhonemePair],
     graphemes: Graphemes,
-) -> Dict[int, List[List[int]]]:
-    ref_map: Dict[int, List[List[int]]] = {}
+) -> RefMap:
+    ref_map: RefMap = dict()
     for phoneme_pair in train_pairs + val_pairs + test_pairs:
         idx = phoneme_pair.index
         phoneme_variants = graphemes[idx][2]

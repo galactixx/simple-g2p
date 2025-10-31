@@ -3,9 +3,11 @@ import argparse
 import torch
 
 from constants import SEED
+from dataset import create_dataloaders
 from evaluation import seq_level_evaluate
 from models import MODELS
-from utils import get_model_checkpoint, seed_everything
+from preprocessing import build_ref_map, parse_cmu_dict, split_and_generate_pairs
+from utils import get_model_checkpoint, load_cmu_dict, seed_everything
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -24,7 +26,7 @@ if __name__ == "__main__":
 
     model_info = MODELS.get(args.model, None)
     assert model_info is not None
-    filename, model_init = model_info
+    filename, _, model_init = model_info
 
     model_path = get_model_checkpoint(filename=filename)
 
@@ -38,5 +40,5 @@ if __name__ == "__main__":
     model = model_init(config=config)
     model.to(device)
 
-    seq_acc = seq_level_evaluate(model, test_loader, config)
+    seq_acc = seq_level_evaluate(model, test_loader, config, ref_map)
     print(f"Sequence accuracy: {seq_acc:.3f}")

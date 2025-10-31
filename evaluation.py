@@ -3,9 +3,12 @@ from typing import Optional
 import torch
 from torch.utils.data import DataLoader
 from torch_ema import ExponentialMovingAverage
+from tqdm.auto import tqdm
 
 from constants import BOS, EOS, PAD
-from preprocessing import TokenConfig
+from preprocessing import RefMap, TokenConfig
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 def _mask_out(x: torch.Tensor, config: TokenConfig) -> torch.Tensor:
@@ -34,6 +37,7 @@ def seq_level_evaluate(
     model: torch.nn.Module,
     loader: DataLoader,
     config: TokenConfig,
+    ref_map: RefMap,
     ema: Optional[ExponentialMovingAverage] = None,
 ) -> float:
     model.eval()
