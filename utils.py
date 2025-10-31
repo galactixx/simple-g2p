@@ -37,7 +37,7 @@ def seed_everything(seed: int) -> None:
 
 def get_model_checkpoint(filename: str) -> Path:
     checkpoint_path = hf_hub_download(
-        repo_id="galactixx/cryogrid-boxes", filename=filename, token=False
+        repo_id="galactixx/g2p-lstm", filename=filename, token=False
     )
     checkpoint_path = Path(checkpoint_path)
     return checkpoint_path
