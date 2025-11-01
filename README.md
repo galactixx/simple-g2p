@@ -5,7 +5,7 @@ Grapheme-to-phoneme (G2P) conversion predicts phonetic pronunciations from writt
 
 ### LSTM
 
-The encoder–decoder Bi-LSTM model uses Luong attention, scheduled sampling during training, and greedy decoding for inference. It achieves a **test sequence-level accuracy of 77%** on the CMUdict dataset.
+The encoder–decoder Bi-LSTM model uses Luong attention, scheduled sampling during training, and greedy decoding for inference. It achieves a **test sequence-level accuracy of 77%** (WER of 23%) on the CMUdict dataset. Beam search did not improve upon greedy decoding when evaluated on the testing set.
 
 #### Training Graphs
 
