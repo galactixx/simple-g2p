@@ -93,7 +93,9 @@ class G2PLSTM(torch.nn.Module):
         )
 
         enc_out = self.enc_layer_norm(self.proj(enc_out))
-        enc_mask = enc_in == self.enc.pad_id
+        enc_mask = torch.arange(enc_out.size(1), device=device).unsqueeze(
+            0
+        ) >= enc_lens.to(device).unsqueeze(1)
 
         init_h, init_c = self.enc_proj(torch.cat([h[-2], h[-1]], dim=1))
         dec_hidden, dec_cell = init_h, init_c

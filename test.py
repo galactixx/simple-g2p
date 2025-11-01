@@ -4,7 +4,7 @@ import torch
 
 from constants import SEED
 from dataset import create_dataloaders
-from evaluation import greedy_decode_evaluation
+from evaluation import beam_search_evaluation, greedy_decode_evaluation
 from models import MODELS
 from preprocessing import build_ref_map, parse_cmu_dict, split_and_generate_pairs
 from utils import get_model_checkpoint, load_cmu_dict, seed_everything
@@ -15,6 +15,12 @@ if __name__ == "__main__":
     seed_everything(seed=SEED)
     parser = argparse.ArgumentParser(
         description="Test a G2P model using different model types."
+    )
+    parser.add_argument(
+        "--decode",
+        choices=["greedy", "beam"],
+        required=True,
+        help="The decoding strategy to use.",
     )
     parser.add_argument(
         "--model",
@@ -44,5 +50,9 @@ if __name__ == "__main__":
     model.to(device)
     model.eval()
 
-    seq_acc = greedy_decode_evaluation(model, test_loader, config, ref_map)
-    print(f"Sequence accuracy: {seq_acc:.3f}")
+    if args.decode == "greedy":
+        seq_acc = greedy_decode_evaluation(model, test_loader, config, ref_map)
+    else:
+        seq_acc = beam_search_evaluation(model, test_loader, config, ref_map)
+
+    print(f"{args.decode.capitalize()} sequence accuracy: {seq_acc:.3f}")
