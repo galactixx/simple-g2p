@@ -38,7 +38,11 @@ if __name__ == "__main__":
     _, _, test_loader = create_dataloaders(config, train, val, test)
 
     model = model_init(config=config)
+
+    weights = torch.load(model_path, map_location=device, weights_only=True)
+    model.load_state_dict(weights, strict=True)
     model.to(device)
+    model.eval()
 
     seq_acc = seq_level_evaluate(model, test_loader, config, ref_map)
     print(f"Sequence accuracy: {seq_acc:.3f}")
