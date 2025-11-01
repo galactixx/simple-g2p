@@ -9,12 +9,23 @@ The encoder–decoder Bi-LSTM model uses Luong attention, scheduled sampling dur
 
 #### Training Graphs
 
+<table>
+<tr>
+<td width="50%">
+
 **Loss vs Sequence Accuracy**: Training loss plotted against sequence-level accuracy throughout training epochs.
 
 ![Loss vs Sequence Accuracy](graphs/lstm-loss-vs-seq-accuracy.jpg)
 
+</td>
+<td width="50%">
+
 **Loss vs Teacher Forcing**: Training loss evolution with varying teacher forcing probabilities during scheduled sampling.
 
 ![Loss vs Teacher Forcing](graphs/lstm-loss-vs-teacher-force.jpg)
+
+</td>
+</tr>
+</table>
 
 <!-- Add results for other models here -->
