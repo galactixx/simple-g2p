@@ -12,7 +12,7 @@ from tqdm.auto import tqdm
 
 from constants import BOS, EOS, PAD
 from dataset import create_dataloaders
-from evaluation import seq_level_evaluate
+from evaluation import greedy_decode_evaluation
 from models import MODELS
 from preprocessing import (
     TokenConfig,
@@ -125,7 +125,7 @@ if __name__ == "__main__":
 
         train_loss = running_loss / len(train_loader.dataset)
         val_loss = token_level_evaluate(model, criterion, ema, val_loader)
-        val_seq_acc = seq_level_evaluate(model, val_loader, config, ref_map, ema)
+        val_seq_acc = greedy_decode_evaluation(model, val_loader, config, ref_map, ema)
         scheduler.step(val_loss)
 
         print(

@@ -33,7 +33,7 @@ def _seq_ref_compare(
     return _seq_compare(ref=ref, pred=pred)
 
 
-def seq_level_evaluate(
+def greedy_decode_evaluation(
     model: torch.nn.Module,
     loader: DataLoader,
     config: TokenConfig,

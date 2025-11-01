@@ -4,7 +4,7 @@ import torch
 
 from constants import SEED
 from dataset import create_dataloaders
-from evaluation import seq_level_evaluate
+from evaluation import greedy_decode_evaluation
 from models import MODELS
 from preprocessing import build_ref_map, parse_cmu_dict, split_and_generate_pairs
 from utils import get_model_checkpoint, load_cmu_dict, seed_everything
@@ -44,5 +44,5 @@ if __name__ == "__main__":
     model.to(device)
     model.eval()
 
-    seq_acc = seq_level_evaluate(model, test_loader, config, ref_map)
+    seq_acc = greedy_decode_evaluation(model, test_loader, config, ref_map)
     print(f"Sequence accuracy: {seq_acc:.3f}")
