@@ -1,4 +1,4 @@
-from typing import Callable, Dict, Tuple, Type, TypeAlias
+from typing import Callable, Dict, Tuple, TypeAlias
 
 import torch
 

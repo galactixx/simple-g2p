@@ -15,7 +15,6 @@ from dataset import create_dataloaders
 from evaluation import greedy_decode_evaluation
 from models import MODELS
 from preprocessing import (
-    TokenConfig,
     build_ref_map,
     parse_cmu_dict,
     split_and_generate_pairs,
